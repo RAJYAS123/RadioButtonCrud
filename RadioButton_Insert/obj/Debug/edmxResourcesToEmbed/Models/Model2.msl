@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="bytecodeModel1StoreContainer" CdmEntityContainer="DatabaseContextt">
+    <EntitySetMapping Name="tblhobbies">
+      <EntityTypeMapping TypeName="bytecodeModel1.tblhobby">
+        <MappingFragment StoreEntitySet="tblhobby">
+          <ScalarProperty Name="hid" ColumnName="hid" />
+          <ScalarProperty Name="hname" ColumnName="hname" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

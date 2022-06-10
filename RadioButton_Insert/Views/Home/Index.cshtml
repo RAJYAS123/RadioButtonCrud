@@ -1,0 +1,132 @@
+﻿@model RadioButton_Insert.Models.QuestionAndAnswer
+
+@{
+    ViewBag.Title = "Index";
+
+}
+
+<h2>Index</h2>
+
+<div>
+
+    @foreach (var item in Model.lstquestion)
+    {
+        <label id="@item.tblQuestionID" value="@item.tblQuestionID" class="question" name="@item.Question"></label><br />
+        @item.Question
+        <br />
+        foreach (var ans in Model.lstanswer)
+        {
+            if (ans.tblQuestionID == item.tblQuestionID)
+            {
+                <input type="radio" id="@ans.tblAnswersID" name="@ans.tblQuestionID" class="answer" value="@ans.tblAnswersID" />
+                @ans.Answer <br />
+            }
+        }
+    }
+
+</div>
+
+<br />
+
+<div>
+    <input type="submit" id="btnsubmit" name="submit" class="btn btn-primary btn-lg" value="SUBMIT" />
+</div>
+
+<div id="question"></div>
+
+
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+
+<script>
+
+    $(document).ready(function () {
+        getdata();
+    });
+
+
+    function getdata() {
+
+        $.ajax({
+            type: "GET",
+            url: "/Home/GetAnswer",
+            data: '',
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                debugger;
+                $.each(data, function (i, data) {
+                   debugger;
+                    var selectedRadiobutton = data.question;
+                    $(selectedRadiobutton).attr("checked", true);
+                    $("#" + data.SelectedAnswer).attr("checked", true);
+                })
+            },
+        });
+    }
+
+
+    $(document).ready(function () {
+       // //debugger;
+        $("#btnsubmit").click(function () {
+           // //debugger;
+            var array = new Array;
+            $('.question').each(function () {
+                ////debugger;
+                var ques = $(this).attr('id');
+                var data = {
+
+                    tblQuestionID: $(this).attr('id'),
+                    SelectedAnswer: $('input:radio[name="' + ques + '"]:checked').val()
+
+                };
+
+                array.push(data);
+
+            });
+
+            //debugger;
+            $.ajax({
+                type: "POST",
+                url: "/Home/InsertIntoDatabase",
+                dataType: "json",
+                data: JSON.stringify({ result: array }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data)
+                {
+                    //debugger;
+                    //ShowAll();
+                    window.location.href = '@Url.Action("Dashboard", "Home")';
+                }
+
+            });
+        });
+    });
+
+
+    function ShowAll() {
+        //debugger;
+        var ques = 0;
+        $.ajax({
+            type: "GET",
+            url: "/Home/GetSingleQuestionAndAnswer",
+            dataType: "json",
+            data: '',
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                debugger;
+                $("#question").empty();
+                $.each(data, function (i, data) {
+                    debugger;
+                    $("#question").append("<p> Ques" + data.tblQuestionID + ":" + data.Question + "</p>")
+                    $("#question").append("<p> Ans:" + data.Answer +' - '+ data.Finalresult + "</p>")
+
+                });
+            }
+
+        });
+    }
+
+
+</script>

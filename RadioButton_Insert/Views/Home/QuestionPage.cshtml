@@ -1,0 +1,57 @@
+﻿@model RadioButton_Insert.Models.HobbyModel
+
+
+@{
+    ViewBag.Title = "QuestionPage";
+}
+
+<h2>Question  Page</h2>
+
+<div>
+    @foreach (var item in Model.getHobby)
+    {
+        <div>
+        <input type="checkbox" name="hobby" class="hobbies" value="@item.hname" />@item.hname
+        </div>
+    }
+    <br />
+    <input type="submit" id="btninsert" value="Submit" class="btn btn-primary" />
+</div>
+
+
+
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<script>
+    $(document).ready(function () {
+        debugger;
+        $("#btninsert").click(function () {
+            debugger;
+            var array = new Array;
+            $('.hobbies').each(function () {
+                debugger;
+                var v = '';
+                $('input:checkbox:checked').each(function () {
+                    v = v + $(this).attr('value') + ",";
+                });
+
+                array.push(v);
+
+            });
+
+            debugger;
+            $.ajax({
+                type: "POST",
+                url: "/Home/SaveDataInDatabase",
+                dataType: "json",
+                data: JSON.stringify({ result: array }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    debugger;
+
+                }
+
+            });
+        });
+    })
+</script>

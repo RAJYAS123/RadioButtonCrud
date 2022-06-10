@@ -1,0 +1,91 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="bytecodeModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="tblAnswer">
+    <Key>
+      <PropertyRef Name="tblAnswersID" />
+    </Key>
+    <Property Name="tblAnswersID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Answer" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="tblQuestionID" Type="Int32" />
+    <NavigationProperty Name="tblQuestion" Relationship="Self.ty" FromRole="tblAnswers" ToRole="tblQuestion" />
+  </EntityType>
+  <EntityType Name="tblQuestion">
+    <Key>
+      <PropertyRef Name="tblQuestionID" />
+    </Key>
+    <Property Name="tblQuestionID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Question" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="tblAnswers" Relationship="Self.ty" FromRole="tblQuestion" ToRole="tblAnswers" />
+    <Property Name="CorrectAnswerId" Type="Int32" />
+  </EntityType>
+  <EntityType Name="tblResult">
+    <Key>
+      <PropertyRef Name="tblResultID" />
+    </Key>
+    <Property Name="tblResultID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="tblQuestionID" Type="Int32" />
+    <Property Name="SelectedAnswer" Type="Int32" />
+  </EntityType>
+  <Association Name="ty">
+    <End Role="tblQuestion" Type="Self.tblQuestion" Multiplicity="0..1" />
+    <End Role="tblAnswers" Type="Self.tblAnswer" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tblQuestion">
+        <PropertyRef Name="tblQuestionID" />
+      </Principal>
+      <Dependent Role="tblAnswers">
+        <PropertyRef Name="tblQuestionID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="DatabaseContext" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="tblAnswers" EntityType="Self.tblAnswer" />
+    <EntitySet Name="tblQuestions" EntityType="Self.tblQuestion" />
+    <EntitySet Name="tblResults" EntityType="Self.tblResult" />
+    <AssociationSet Name="ty" Association="Self.ty">
+      <End Role="tblQuestion" EntitySet="tblQuestions" />
+      <End Role="tblAnswers" EntitySet="tblAnswers" />
+    </AssociationSet>
+    <FunctionImport Name="GetAllQuestionAndAnswer" ReturnType="Collection(bytecodeModel.GetAllQuestionAndAnswer_Result)" />
+    <FunctionImport Name="JoinQuestionAndAnswer" ReturnType="Collection(bytecodeModel.JoinQuestionAndAnswer_Result)" />
+    <FunctionImport Name="InsertQuestionAnsAnswer">
+      <Parameter Name="QuestionId" Mode="In" Type="Int32" />
+      <Parameter Name="SelectedAnswer" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="UpdateQuestionAnsAnswer">
+      <Parameter Name="QuestionId" Mode="In" Type="Int32" />
+      <Parameter Name="SelectedAnswer" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="GetAnswer" ReturnType="Collection(bytecodeModel.GetAnswer_Result)" />
+    <FunctionImport Name="GetQuestion" ReturnType="Collection(bytecodeModel.GetQuestion_Result)" />
+    <FunctionImport Name="JoinQuestionAndAnswer1" ReturnType="Collection(bytecodeModel.JoinQuestionAndAnswer1_Result)" />
+  </EntityContainer>
+  <ComplexType Name="GetAllQuestionAndAnswer_Result">
+    <Property Type="Int32" Name="tblResultID" Nullable="false" />
+    <Property Type="Int32" Name="tblQuestionID" Nullable="true" />
+    <Property Type="Int32" Name="SelectedAnswer" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="JoinQuestionAndAnswer_Result">
+    <Property Type="Int32" Name="tblQuestionID" Nullable="true" />
+    <Property Type="String" Name="Question" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="Answer" Nullable="true" MaxLength="50" />
+    <Property Type="Int32" Name="SelectedAnswer" Nullable="true" />
+    <Property Type="String" Name="Finalresult" Nullable="false" MaxLength="14" />
+  </ComplexType>
+  <ComplexType Name="GetAnswer_Result">
+    <Property Type="Int32" Name="tblAnswersID" Nullable="false" />
+    <Property Type="String" Name="Answer" Nullable="true" MaxLength="50" />
+    <Property Type="Int32" Name="tblQuestionID" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="GetQuestion_Result">
+    <Property Type="Int32" Name="tblQuestionID" Nullable="false" />
+    <Property Type="String" Name="Question" Nullable="true" MaxLength="50" />
+  </ComplexType>
+  <ComplexType Name="JoinQuestionAndAnswer1_Result">
+    <Property Type="Int32" Name="tblQuestionID" Nullable="true" />
+    <Property Type="String" Name="Question" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="Answer" Nullable="true" MaxLength="50" />
+    <Property Type="Int32" Name="SelectedAnswer" Nullable="true" />
+    <Property Type="String" Name="Finalresult" Nullable="false" MaxLength="14" />
+  </ComplexType>
+</Schema>
